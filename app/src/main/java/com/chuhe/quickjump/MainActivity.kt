@@ -97,8 +97,9 @@ class MainActivity : AppCompatActivity() {
         val base = ENTRIES.getValue(key)
         val custom = loadCustomUris(key)
         val entry = if (custom.isNotEmpty()) {
-            // 自定义链接替换第一条链；其余内置链仍作为兜底
-            base.copy(chains = listOf(base.chains.first().copy(uris = custom)) + base.chains.drop(1))
+            // 自定义链接要覆盖每一条链：抖音有正版/极速版两条链，
+            // 只改第一条会让极速版用户的自定义链接完全不生效。
+            base.copy(chains = base.chains.map { it.copy(uris = (custom + it.uris).distinct()) })
         } else {
             base
         }
