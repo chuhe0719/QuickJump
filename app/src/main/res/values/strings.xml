@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">快捷跳转</string>
-
-    <!-- 首页 2×3 按钮 -->
     <string name="btn_cainiao">菜鸟身份码</string>
     <string name="btn_taobao">淘宝身份码</string>
     <string name="btn_pdd">拼多多身份码</string>
     <string name="btn_express">淘宝待取快递</string>
     <string name="btn_pdd_pending">拼多多待取快递</string>
     <string name="btn_douyin">抖音待取快递</string>
+    <string name="btn_jd">京东待取快递</string>
     <string name="edit_hint">长按按钮可自定义入口链接 · 长按问号可编辑本页内容</string>
     <string name="about_mark">？</string>
     <string name="about_title">关于</string>
-
-    <!-- 「关于」页默认内容（长按左下角问号可随时修改，保存在本机） -->
     <string name="about_text">关于「快捷跳转」\n\n这是一个纯本地的快递入口小工具：\n· 不联网、不申请权限、不收集任何数据\n· 六个按钮直达取件码 / 待取快递页面\n· 长按任意按钮可自定义入口链接\n\n——————\n\n作者：chuhe0719\n源码与更新：https://github.com/chuhe0719/QuickJump\n（新版本会在 Releases 里发布，欢迎 Star）\n\n抖音号：29910020595（抖音搜索即可找到我）\n\n觉得好用的话，去抖音给作者点个赞、加个关注吧~</string>
-
-    <!-- 桌面长按快捷菜单：只放 3 个身份码入口（shortLabel 建议不超过 10 个字） -->
     <string name="shortcut_cainiao">菜鸟身份码</string>
     <string name="shortcut_cainiao_long">菜鸟身份码</string>
     <string name="shortcut_taobao">淘宝身份码</string>

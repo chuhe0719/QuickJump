@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--
-        Android 11+ 包可见性声明：
-        1. 指定包名的 deeplink 跳转需要目标包可见；
-        2. 声明用到的 deeplink scheme。
-        本应用不申请任何权限（无网络、无存储、无定位），不收集任何数据。
-    -->
+    
     <queries>
         <package android:name="com.cainiao.wireless" />
         <package android:name="com.taobao.taobao" />
         <package android:name="com.xunmeng.pinduoduo" />
         <package android:name="com.ss.android.ugc.aweme" />
         <package android:name="com.ss.android.ugc.aweme.lite" />
+        <package android:name="com.jingdong.app.mall" />
 
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -40,6 +36,10 @@
         </intent>
         <intent>
             <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="openjd" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
             <data android:scheme="https" />
         </intent>
     </queries>
@@ -60,7 +60,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- 桌面长按图标快捷菜单 -->
+            
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
