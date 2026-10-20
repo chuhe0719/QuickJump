@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    桌面长按 App 图标弹出的快捷菜单：只放 3 个身份码入口。
-    其余入口（淘宝待取快递 / 拼多多待取快递 / 抖音待取快递）打开 App 后使用。
-    每个快捷方式显式启动本 App 的 MainActivity 并附带 jump_target 参数，
-    由 MainActivity 统一做多级回退跳转，目标链接在其 ENTRIES 中维护。
--->
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
-
     <shortcut
         android:shortcutId="cainiao_code"
         android:enabled="true"
@@ -22,7 +15,6 @@
                 android:value="cainiao" />
         </intent>
     </shortcut>
-
     <shortcut
         android:shortcutId="taobao_code"
         android:enabled="true"
@@ -38,7 +30,6 @@
                 android:value="taobao" />
         </intent>
     </shortcut>
-
     <shortcut
         android:shortcutId="pdd_code"
         android:enabled="true"
@@ -54,5 +45,4 @@
                 android:value="pdd" />
         </intent>
     </shortcut>
-
 </shortcuts>

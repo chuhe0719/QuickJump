@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 首页：2 列 × 3 行，6 个平台色卡片按钮 + 左下角关于按钮 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_screen"
     android:orientation="vertical"
     android:padding="16dp">
-
-    <!-- 第 1 行：菜鸟身份码 / 淘宝身份码 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_cainiao"
             style="@style/CardButton"
@@ -21,10 +17,10 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:layout_weight="1"
+            android:background="@drawable/bg_card_cainiao"
             android:drawableTop="@drawable/ic_cainiao"
             android:text="@string/btn_cainiao"
             android:textColor="#1677FF" />
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_taobao"
             style="@style/CardButton"
@@ -32,18 +28,16 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:layout_weight="1"
+            android:background="@drawable/bg_card_taobao"
             android:drawableTop="@drawable/ic_taobao"
             android:text="@string/btn_taobao"
-            android:textColor="#FF5000" />
+            android:textColor="#E4470B" />
     </LinearLayout>
-
-    <!-- 第 2 行：拼多多身份码 / 淘宝待取快递 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_pdd"
             style="@style/CardButton"
@@ -51,10 +45,10 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:layout_weight="1"
+            android:background="@drawable/bg_card_pdd"
             android:drawableTop="@drawable/ic_pdd"
             android:text="@string/btn_pdd"
-            android:textColor="#E02E24" />
-
+            android:textColor="#D31F16" />
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_express"
             style="@style/CardButton"
@@ -62,18 +56,16 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:layout_weight="1"
+            android:background="@drawable/bg_card_taobao"
             android:drawableTop="@drawable/ic_express"
             android:text="@string/btn_express"
-            android:textColor="#FF5000" />
+            android:textColor="#E4470B" />
     </LinearLayout>
-
-    <!-- 第 3 行：拼多多待取快递 / 抖音待取快递 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="horizontal">
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_pdd_pending"
             style="@style/CardButton"
@@ -81,10 +73,10 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:layout_weight="1"
+            android:background="@drawable/bg_card_pdd"
             android:drawableTop="@drawable/ic_pdd"
             android:text="@string/btn_pdd_pending"
-            android:textColor="#E02E24" />
-
+            android:textColor="#D31F16" />
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_douyin"
             style="@style/CardButton"
@@ -92,42 +84,45 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:layout_weight="1"
+            android:background="@drawable/bg_card_douyin"
             android:drawableTop="@drawable/ic_douyin"
             android:text="@string/btn_douyin"
             android:textColor="#161823" />
     </LinearLayout>
-
-    <!-- 底部栏：左下角问号（关于）+ 提示文字 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_jd"
+            style="@style/CardButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_card_jd"
+            android:drawableTop="@drawable/ic_jd"
+            android:text="@string/btn_jd"
+            android:textColor="#D42317" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:gravity="center_vertical"
         android:orientation="horizontal">
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_about"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/bg_fab"
-            android:elevation="2dp"
+            android:elevation="4dp"
             android:gravity="center"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:padding="0dp"
             android:text="@string/about_mark"
-            android:textColor="#6B7280"
-            android:textSize="16sp"
+            android:textColor="#1677FF"
+            android:textSize="18sp"
             android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/edit_hint"
-            android:textColor="#A8AEB8"
-            android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

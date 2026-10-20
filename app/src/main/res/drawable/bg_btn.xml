@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 圆角白底卡片按钮：带按压水波纹反馈 -->
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="#338090A0">
     <item>
