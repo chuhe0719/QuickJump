@@ -1,0 +1,38 @@
+name: 入口失效上报
+description: 某个按钮点了没反应，或跳到了错误的页面
+title: "[入口失效] "
+labels: [broken-link]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        建议直接在 App 内操作：**关于 → 入口体检 → 上报**，会自动带上机型与每条链接的检测结果。
+  - type: input
+    id: entry
+    attributes:
+      label: 哪个入口
+      placeholder: 菜鸟身份码 / 淘宝待取快递 / ...
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: 手机型号与系统版本
+      placeholder: vivo X90 / Android 14
+    validations:
+      required: true
+  - type: input
+    id: appver
+    attributes:
+      label: 目标 App 版本
+      placeholder: 菜鸟 8.9.0（设置 → 关于里可看）
+  - type: textarea
+    id: detail
+    attributes:
+      label: 实际表现
+      placeholder: 点下去没反应 / 打开了 App 首页 / 跳到了别的页面
+  - type: textarea
+    id: log
+    attributes:
+      label: 入口体检结果（从 App 里复制）
+      render: text

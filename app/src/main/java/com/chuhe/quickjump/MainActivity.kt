@@ -1,10 +1,14 @@
 package com.chuhe.quickjump
 
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
@@ -62,12 +66,16 @@ class MainActivity : AppCompatActivity() {
         bind(R.id.btn_pdd_pending, KEY_PDD_PENDING)
         bind(R.id.btn_douyin, KEY_DOUYIN)
 
-        // 处理桌面长按快捷方式带入的跳转请求
-        handleDispatchIntent(intent)
+        // 只在首次创建时处理桌面快捷方式请求：转屏 / 从最近任务恢复时
+        // savedInstanceState 非空，若再次处理会重复跳转一次。
+        if (savedInstanceState == null) handleDispatchIntent(intent)
+        // 消费掉 extra，避免后续重建再次命中
+        intent?.removeExtra(EXTRA_TARGET)
 
         // 左下角问号：点开「关于」，长按编辑内容
-        findViewById<View>(R.id.btn_about).setOnClickListener { showAbout() }
-        findViewById<View>(R.id.btn_about).setOnLongClickListener {
+        val about = findViewById<View>(R.id.btn_about)
+        about.setOnClickListener { showAbout() }
+        about.setOnLongClickListener {
             showEditAbout()
             true
         }
@@ -75,7 +83,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        // 同步更新 getIntent()，否则后续读取到的仍是启动时那一个
+        setIntent(intent)
         handleDispatchIntent(intent)
+        intent.removeExtra(EXTRA_TARGET)
     }
 
     private fun bind(viewId: Int, key: String) {
@@ -92,24 +103,36 @@ class MainActivity : AppCompatActivity() {
         if (ENTRIES.containsKey(key)) jumpFor(key)
     }
 
-    /** 应用用户自定义链接（若有）后执行跳转 */
-    private fun jumpFor(key: String) {
+    /**
+     * 把用户自定义链接合并进内置配置：优先于内置链接，但仍保留内置链与网页兜底。
+     * 注意要覆盖**每一条** chain——抖音有正版/极速版两条链，只改第一条会让
+     * 极速版用户的自定义链接完全不生效。
+     */
+    private fun effectiveEntry(key: String): Entry {
         val base = ENTRIES.getValue(key)
         val custom = loadCustomUris(key)
-        val entry = if (custom.isNotEmpty()) {
-            // 自定义链接替换第一条链；其余内置链仍作为兜底
-            base.copy(chains = listOf(base.chains.first().copy(uris = custom)) + base.chains.drop(1))
-        } else {
-            base
-        }
-        jump(entry)
+        if (custom.isEmpty()) return base
+        return base.copy(
+            chains = base.chains.map { chain ->
+                chain.copy(uris = (custom + chain.uris).distinct())
+            }
+        )
+    }
+
+    /** 应用用户自定义链接（若有）后执行跳转 */
+    private fun jumpFor(key: String) {
+        jump(effectiveEntry(key))
     }
 
     /** 多级回退跳转：链 → 拉起 App → 网页 */
     private fun jump(entry: Entry) {
+        var tried = 0
         // 第 1 级：逐条链、逐条 deeplink 尝试（setPackage 限定目标 App）
+        // 先做可解析性判断，避免"点了没反应"——不可解析的链接直接跳过。
         for (chain in entry.chains) {
             for (uri in chain.uris) {
+                if (!canResolve(uri, chain.pkg)) continue
+                tried++
                 if (tryOpen(uri, chain.pkg)) return
             }
         }
@@ -120,11 +143,16 @@ class MainActivity : AppCompatActivity() {
         // 第 3 级：网页兜底——先试目标 App 内渲染，再退浏览器
         entry.webUri?.let { web ->
             for (chain in entry.chains) {
-                if (tryOpen(web, chain.pkg)) return
+                if (canResolve(web, chain.pkg) && tryOpen(web, chain.pkg)) return
             }
-            if (tryOpen(web, null)) return
+            if (canResolve(web, null) && tryOpen(web, null)) return
         }
-        showDialog("暂时无法打开「${entry.title}」\n可长按按钮更新入口链接，或确认对应 App 已安装")
+        val reason = if (tried == 0) {
+            "没有可用的直达链接（对应 App 未安装，或链接已随目标 App 更新失效）"
+        } else {
+            "已尝试 $tried 条直达链接，全部无响应"
+        }
+        showDialog("暂时无法打开「${entry.title}」\n$reason\n\n可长按按钮更新入口链接，或打开「关于 → 入口体检」查看详情")
     }
 
     private fun tryOpen(uri: String, pkg: String?): Boolean {
@@ -183,9 +211,10 @@ class MainActivity : AppCompatActivity() {
             textSize = 14f
             setLineSpacing(4f, 1f)
             setPadding(48, 32, 48, 16)
-            movementMethod = LinkMovementMethod.getInstance()
-            Linkify.addLinks(this, Linkify.WEB_URLS)
+            // 先允许选中，再设 MovementMethod，否则选中模式会抢掉链接点击
             setTextIsSelectable(true)
+            Linkify.addLinks(this, Linkify.WEB_URLS)
+            movementMethod = LinkMovementMethod.getInstance()
         }
         val scroll = ScrollView(this).apply { addView(tv) }
         AlertDialog.Builder(this)
@@ -197,16 +226,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 入口体检：逐条检测每条 deeplink 在当前手机上是否有页面响应。
-     * 结果可选中复制或截图发给作者，用于远程定位失效链接。
+     * 入口体检：按「实际生效」的配置逐条检测 deeplink 是否有页面响应。
+     * 结果可复制，或一键打开预填好的 GitHub Issue（App 自身仍不联网，
+     * 由浏览器完成上报）。
      */
     private fun showDiagnostics() {
         val sb = StringBuilder()
-        sb.appendLine("设备: Android ${android.os.Build.VERSION.RELEASE} (${android.os.Build.MODEL})")
+        sb.appendLine("设备: Android ${Build.VERSION.RELEASE} (${Build.MODEL})")
         sb.appendLine("App 版本: ${BuildConfig.VERSION_NAME}")
         sb.appendLine()
-        for ((_, entry) in ENTRIES) {
-            sb.appendLine("【${entry.title}】")
+        for (key in ENTRIES.keys) {
+            val entry = effectiveEntry(key)
+            val customized = loadCustomUris(key).isNotEmpty()
+            sb.appendLine("【${entry.title}】${if (customized) " (含自定义链接)" else ""}")
             for (chain in entry.chains) {
                 val installed = isAppInstalled(chain.pkg)
                 sb.appendLine(" 目标App ${if (installed) "✓已安装" else "✗未安装"} (${chain.pkg})")
@@ -218,9 +250,11 @@ class MainActivity : AppCompatActivity() {
             sb.appendLine()
         }
         sb.appendLine("✗无响应 = 该链接在当前版本上没有页面处理（未安装或链接已失效）")
-        sb.append("长按对应按钮可更新链接；截图发给作者可远程修复")
+        sb.append("长按对应按钮可更新链接；点「上报」可把本页内容直接带进 Issue")
+        val report = sb.toString()
+
         val tv = TextView(this).apply {
-            text = sb.toString()
+            text = report
             textSize = 12f
             typeface = Typeface.MONOSPACE
             setPadding(40, 24, 40, 8)
@@ -231,23 +265,56 @@ class MainActivity : AppCompatActivity() {
             .setTitle("入口体检")
             .setView(scroll)
             .setPositiveButton("关闭", null)
+            .setNeutralButton("复制") { _, _ ->
+                copyToClipboard(report)
+                Toast.makeText(this, "体检结果已复制", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("上报") { _, _ -> reportIssue(report) }
             .show()
+    }
+
+    private fun copyToClipboard(text: String) {
+        val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        cm.setPrimaryClip(ClipData.newPlainText("QuickJump 体检结果", text))
+    }
+
+    /** 生成预填好标题和正文的 GitHub Issue 链接，交给浏览器打开 */
+    private fun reportIssue(report: String) {
+        val body = report.take(2000)
+        val url = "https://github.com/chuhe0719/QuickJump/issues/new" +
+            "?title=" + Uri.encode("入口失效上报 v${BuildConfig.VERSION_NAME}") +
+            "&body=" + Uri.encode(body)
+        if (!tryOpen(url, null)) {
+            copyToClipboard(report)
+            Toast.makeText(this, "无法打开浏览器，体检结果已复制", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun shortUri(uri: String): String =
         if (uri.length <= 60) uri else uri.substring(0, 60) + "..."
 
     private fun isAppInstalled(pkg: String): Boolean = try {
-        packageManager.getPackageInfo(pkg, 0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            packageManager.getPackageInfo(pkg, PackageManager.PackageInfoFlags.of(0))
+        } else {
+            @Suppress("DEPRECATION")
+            packageManager.getPackageInfo(pkg, 0)
+        }
         true
     } catch (e: Exception) {
         false
     }
 
-    private fun canResolve(uri: String, pkg: String): Boolean = try {
+    private fun canResolve(uri: String, pkg: String?): Boolean = try {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         if (pkg != null) intent.setPackage(pkg)
-        packageManager.queryIntentActivities(intent, 0).isNotEmpty()
+        val matches = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            packageManager.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(0))
+        } else {
+            @Suppress("DEPRECATION")
+            packageManager.queryIntentActivities(intent, 0)
+        }
+        matches.isNotEmpty()
     } catch (e: Exception) {
         false
     }
@@ -298,7 +365,7 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("编辑「${base.title}」入口")
             .setMessage(
-                "每行一条 deeplink，按顺序尝试。\n" +
+                "每行一条 deeplink，按顺序尝试；自定义链接会同时用于该入口的所有目标 App。\n" +
                     "目标 App 更新后链接失效时，用「开发者助手」App 查看新链接后填到这里即可。\n" +
                     "选择「恢复默认」将清除自定义内容。"
             )
@@ -343,12 +410,18 @@ class MainActivity : AppCompatActivity() {
         private val ENTRIES = mapOf(
 
             // 1) 菜鸟身份码：菜鸟裹裹驿站身份码页
+            //    菜鸟 8.x 起走 guoguo:// 路由，旧的 cainiao://desktop/station_code 已无响应，
+            //    故把 guoguo 放在前面、旧链接留作兜底（实测 2026-10，Android 15 / 菜鸟 9.x）。
             KEY_CAINIAO to Entry(
                 title = "菜鸟身份码",
                 chains = listOf(
                     Chain(
                         pkg = "com.cainiao.wireless",
-                        uris = listOf("cainiao://desktop/station_code")
+                        uris = listOf(
+                            "guoguo://go/station_code",
+                            "guoguo://go/station_code?entrance=icon",
+                            "cainiao://desktop/station_code"
+                        )
                     )
                 ),
                 openAppPkgs = listOf("com.cainiao.wireless"),
@@ -435,6 +508,8 @@ class MainActivity : AppCompatActivity() {
                     )
                 ),
                 openAppPkgs = listOf(PKG_DOUYIN, PKG_DOUYIN_LITE)
+                // 抖音没有公开可用的订单 H5（需登录且随版本变化），故不设 webUri；
+                // 接入前请先用浏览器验证，避免把 404 当兜底。
             )
         )
     }

@@ -38,9 +38,11 @@
 1. **免打包修复**：长按失效的按钮，填入新链接即可（新链接可用「开发者助手」类工具查看，或查询 scheme 汇总库）
 2. **更新源码**：修改 `MainActivity.kt` 中的 `ENTRIES` 配置后重新构建
 
+不确定哪条链接失效时，打开 **关于（左下角问号）→ 入口体检**：会逐条列出「已安装 / 可用 / 无响应」，检测的是**当前实际生效**的配置（包含你自定义过的链接）。结果可以直接「复制」，或点「上报」自动打开预填好的 Issue（App 自身仍然不联网，由浏览器提交）。
+
 ## 本地构建
 
-需要 JDK 17 和 Android SDK 34：
+需要 JDK 17 和 Android SDK 34（仓库已内置 Gradle Wrapper，不需要另外安装 Gradle）：
 
 ```
 ./gradlew assembleDebug
@@ -48,9 +50,24 @@
 
 APK 输出在 `app/build/outputs/apk/debug/app-debug.apk`。
 
+需要在 `local.properties` 里指定 SDK 路径（或设置 `ANDROID_HOME` 环境变量）：
+
+```
+sdk.dir=/path/to/Android/Sdk
+```
+
+推送到 GitHub 后，Actions 会自动构建 debug APK 并作为 artifact 上传（见 `.github/workflows/build.yml`）。
+打正式包需要自备 keystore：在 `app/build.gradle.kts` 里补 `signingConfigs`，否则 release 只能使用 debug 签名，换机或换机器重新打包会因签名不一致而无法覆盖安装。
+
 ## 声明
 
 - 仅供个人学习与自用，**请勿上架应用商店**
 - 各页面入口属于第三方 App 的内部链接，版权归对应公司所有
+- 抖音订单页目前没有公开可用的 H5 兜底，因此该入口只走 App 内跳转
+
+## 许可与致谢
+
+- 本项目以 [MIT License](LICENSE) 开源
+- 跳转模型参考 [EidenLiu/pickup-code-launcher](https://github.com/EidenLiu/pickup-code-launcher)（MIT），特此致谢
 
 作者：chuhe0719 · 抖音号：29910020595

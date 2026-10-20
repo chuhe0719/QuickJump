@@ -1,0 +1,8 @@
+# 换行符固定，避免 Windows 上提交的脚本在 Linux/CI 上跑不起来
+* text=auto
+gradlew   text eol=lf
+*.sh      text eol=lf
+*.bat     text eol=crlf
+*.jar     binary
+*.png     binary
+*.apk     binary
