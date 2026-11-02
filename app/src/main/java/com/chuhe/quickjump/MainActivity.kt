@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         bind(R.id.btn_pdd_pending, KEY_PDD_PENDING)
         bind(R.id.btn_douyin, KEY_DOUYIN)
         bind(R.id.btn_jd, KEY_JD)
-        handleDispatchIntent(intent)
+        if (savedInstanceState == null) handleDispatchIntent(intent)
         findViewById<View>(R.id.btn_about).setOnClickListener { showAbout() }
         findViewById<View>(R.id.btn_about).setOnLongClickListener {
             showEditAbout()
@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     }
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        setIntent(intent)
         handleDispatchIntent(intent)
     }
     private fun bind(viewId: Int, key: String) {
@@ -59,13 +60,15 @@ class MainActivity : AppCompatActivity() {
     }
     private fun handleDispatchIntent(intent: Intent?) {
         val key = intent?.getStringExtra(EXTRA_TARGET) ?: return
-        if (ENTRIES.containsKey(key)) jumpFor(key)
+        if (!ENTRIES.containsKey(key)) return
+        intent.removeExtra(EXTRA_TARGET)
+        jumpFor(key)
     }
     private fun jumpFor(key: String) {
         val base = ENTRIES.getValue(key)
         val custom = loadCustomUris(key)
         val entry = if (custom.isNotEmpty()) {
-            base.copy(chains = listOf(base.chains.first().copy(uris = custom)) + base.chains.drop(1))
+            base.copy(chains = base.chains.map { it.copy(uris = (custom + it.uris).distinct()) })
         } else {
             base
         }

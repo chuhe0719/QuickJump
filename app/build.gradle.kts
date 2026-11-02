@@ -9,8 +9,8 @@ android {
         applicationId = "com.chuhe.quickjump"
         minSdk = 26
         targetSdk = 34
-        versionCode = 11314535
-        versionName = "5.21.32"
+        versionCode = 11314536
+        versionName = "5.21.33"
     }
     buildFeatures {
         buildConfig = true
