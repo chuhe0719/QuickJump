@@ -6,11 +6,12 @@
 
 ## 功能
 
-- **6 个快捷入口**，点击直达对应页面：
+- **7 个快捷入口**，点击直达对应页面：
   - 菜鸟身份码（菜鸟裹裹）
   - 淘宝身份码 / 淘宝待取快递
   - 拼多多身份码 / 拼多多待取快递
   - 抖音待取快递（兼容正版抖音与抖音极速版）
+  - 京东待取快递（取件信息在订单详情中查看）
 - **桌面长按菜单**：长按 App 图标，快速使用 3 个身份码入口
 - **入口可自定义**：长按任意按钮即可修改该入口的链接，链接失效不用重新打包，保存在本机立即生效
 - **多级回退**：每条链接失败会自动降级（换链接 → 拉起目标 App → 网页兜底），尽量保证点得动
@@ -47,6 +48,17 @@
 ```
 
 APK 输出在 `app/build/outputs/apk/debug/app-debug.apk`。
+
+## 致谢
+
+感谢以下朋友的反馈与贡献，让这个工具变得更好用：
+
+- [@Wangxiaolu0716](https://github.com/Wangxiaolu0716) —— 提交了多链入口自定义链接覆盖、转屏重复跳转等修复建议（#1 #2）
+- [@Bai-2008](https://github.com/Bai-2008) —— 附带体检截图的失效反馈（#4）
+- [@NetheriteBowl](https://github.com/NetheriteBowl) —— 提醒补充开源协议（#5）
+- [@Shenyu2022](https://github.com/Shenyu2022) —— 鼓励与支持（#3）
+
+入口链接核对参考了开源项目 [EidenLiu/pickup-code-launcher](https://github.com/EidenLiu/pickup-code-launcher)（MIT）。
 
 ## 声明
 
