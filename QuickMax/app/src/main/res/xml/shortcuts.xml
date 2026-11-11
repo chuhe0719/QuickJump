@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="cainiao_code"
+        android:enabled="true"
+        android:icon="@drawable/ic_cainiao"
+        android:shortcutShortLabel="@string/shortcut_cainiao"
+        android:shortcutLongLabel="@string/shortcut_cainiao_long">
+        <intent
+            android:action="com.chuhe.quickmax.JUMP"
+            android:targetPackage="com.chuhe.quickmax"
+            android:targetClass="com.chuhe.quickmax.MainActivity">
+            <extra
+                android:name="jump_target"
+                android:value="cainiao" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="taobao_code"
+        android:enabled="true"
+        android:icon="@drawable/ic_taobao"
+        android:shortcutShortLabel="@string/shortcut_taobao"
+        android:shortcutLongLabel="@string/shortcut_taobao_long">
+        <intent
+            android:action="com.chuhe.quickmax.JUMP"
+            android:targetPackage="com.chuhe.quickmax"
+            android:targetClass="com.chuhe.quickmax.MainActivity">
+            <extra
+                android:name="jump_target"
+                android:value="taobao" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="pdd_code"
+        android:enabled="true"
+        android:icon="@drawable/ic_pdd"
+        android:shortcutShortLabel="@string/shortcut_pdd"
+        android:shortcutLongLabel="@string/shortcut_pdd_long">
+        <intent
+            android:action="com.chuhe.quickmax.JUMP"
+            android:targetPackage="com.chuhe.quickmax"
+            android:targetClass="com.chuhe.quickmax.MainActivity">
+            <extra
+                android:name="jump_target"
+                android:value="pdd" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="codes"
+        android:enabled="true"
+        android:icon="@drawable/ic_codes"
+        android:shortcutShortLabel="@string/shortcut_codes"
+        android:shortcutLongLabel="@string/shortcut_codes_long">
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetPackage="com.chuhe.quickmax"
+            android:targetClass="com.chuhe.quickmax.CodesActivity" />
+    </shortcut>
+</shortcuts>

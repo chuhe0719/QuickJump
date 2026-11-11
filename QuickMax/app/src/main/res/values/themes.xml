@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.QuickMax" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">#FAFBFE</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="alertDialogTheme">@style/AlertDialog.QuickMax</item>
+    </style>
+    <style name="AlertDialog.QuickMax" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/bg_dialog</item>
+        <item name="colorAccent">#1677FF</item>
+        <item name="android:textColorPrimary">#1F2329</item>
+        <item name="android:textColorSecondary">#6B7280</item>
+        <item name="android:backgroundDimAmount">0.42</item>
+    </style>
+    <style name="CardButton">
+        <item name="android:background">@drawable/bg_btn</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:drawablePadding">9dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

@@ -1,0 +1,16 @@
+# Android / Gradle 构建产物
+.gradle/
+build/
+app/build/
+local.properties
+captures/
+.cxx/
+
+# IDE
+.idea/
+*.iml
+
+# 签名等敏感文件（如有）
+*.jks
+*.keystore
+keystore.properties

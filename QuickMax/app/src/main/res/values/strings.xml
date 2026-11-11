@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QuickMax</string>
+    <string name="btn_cainiao">菜鸟身份码</string>
+    <string name="btn_taobao">淘宝身份码</string>
+    <string name="btn_pdd">拼多多身份码</string>
+    <string name="btn_express">淘宝待取快递</string>
+    <string name="btn_pdd_pending">拼多多待取快递</string>
+    <string name="btn_douyin">抖音待取快递</string>
+    <string name="btn_jd">京东待取快递</string>
+    <string name="btn_codes">取件码 ›</string>
+    <string name="edit_hint">长按按钮改链接 · 点头像看关于 · 长按头像换背景 · 左滑进「取件码」</string>
+    <string name="about_mark">？</string>
+    <string name="about_title">关于</string>
+    <string name="about_text">关于 QuickMax\n\n纯本地的快递工具：\n· 不联网、不申请权限、不收集任何数据\n· 七个入口直达身份码 / 待取快递页面\n· 第二页「取件码」：截图识别、手动记、长按标记已取/未取\n· 截图识别用手机本地的离线 OCR，图片不会上传\n· 长按任意按钮可自定义入口链接\n\n——————\n\n作者：chuhe0719\n抖音号：29910020595（抖音搜索即可找到我）\n\n觉得好用的话，去抖音给作者点个赞、加个关注吧~</string>
+    <string name="shortcut_cainiao">菜鸟身份码</string>
+    <string name="shortcut_cainiao_long">菜鸟身份码</string>
+    <string name="shortcut_taobao">淘宝身份码</string>
+    <string name="shortcut_taobao_long">淘宝身份码</string>
+    <string name="shortcut_pdd">拼多多身份码</string>
+    <string name="shortcut_pdd_long">拼多多身份码</string>
+    <string name="shortcut_codes">取件码</string>
+    <string name="shortcut_codes_long">取件码</string>
+    <string name="codes_title">取件码</string>
+    <string name="back_mark">‹</string>
+    <string name="delete_mark">×</string>
+    <string name="clear_taken">清空已取</string>
+    <string name="scan_screenshot">从截图识别</string>
+    <string name="take_photo">拍照识别</string>
+    <string name="add_manually">＋ 手动添加</string>
+    <string name="codes_hint">点卡片放大 · 长按标记已取</string>
+    <string name="codes_empty_title">还没有取件码</string>
+    <string name="codes_empty_desc">点上方「从截图识别」，或把截图直接分享到本 App</string>
+</resources>
